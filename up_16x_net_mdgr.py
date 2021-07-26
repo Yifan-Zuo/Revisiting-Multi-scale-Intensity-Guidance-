@@ -15,7 +15,7 @@ width=128
 #setting input size and training data addr
 epo_range=50
 train_h5F_addr="/media/kenny/Data/training_data/gdsr_train_data/16x_data/shuffle_version/16x_training_data.h5"
-total_pat=220500
+total_pat=220416
 total_val_pat=24500
 LR_height=height/up_factor
 LR_width=width/up_factor
@@ -75,15 +75,15 @@ with h5py.File(train_h5F_addr,"r") as train_file:
                 gen_pat_ind_range=range(ind*batch_sz,(ind+1)*batch_sz,1)
                 gen_inten_bat,gen_gth_dep_bat,gen_LR_dep_bat=bnb.reading_data(train_file, gen_pat_ind_range, HR_batch_dims, LR_batch_dims)
                 sess.run(train_op,feed_dict={HR_inten_batch_input:gen_inten_bat,HR_depth_batch_input:gen_gth_dep_bat,LR_depth_batch_input:gen_LR_dep_bat})
-                if (ind+1)%1914==0:
+                if (ind+1)%1722==0:
                     mae_loss=loss.eval(feed_dict={HR_inten_batch_input:gen_inten_bat,HR_depth_batch_input:gen_gth_dep_bat,LR_depth_batch_input:gen_LR_dep_bat})
                     print("step %d, training loss %g"%(ind, mae_loss))
-                if (ind+1)%7656==0:
+                if (ind+1)%6888==0:
                     save_path=saver_full.save(sess,"/media/kenny/Data/trained_models/multi_dense_guide_resnet/noise-free/l1loss/16x/full_model1/16x_nf_full_model.ckpt",global_step=model_ind)
                     print("Full Model saved in file: %s" % save_path)
                     val_mae_loss=0
                     for val_ind in range(val_batch_total):
-                        gen_pat_ind_range=range(total_pat+val_ind*batch_sz,total_pat+(val_ind+1)*batch_sz,1)
+                        gen_pat_ind_range=range(220500+val_ind*batch_sz,total_pat+(val_ind+1)*batch_sz,1)
                         gen_inten_bat,gen_gth_dep_bat,gen_LR_dep_bat=bnb.reading_data(train_file, gen_pat_ind_range, HR_batch_dims, LR_batch_dims)
                         mae_loss=loss.eval(feed_dict={HR_inten_batch_input:gen_inten_bat,HR_depth_batch_input:gen_gth_dep_bat,LR_depth_batch_input:gen_LR_dep_bat})
                         val_mae_loss=val_mae_loss+mae_loss
