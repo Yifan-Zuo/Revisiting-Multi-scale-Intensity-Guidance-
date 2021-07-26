@@ -71,7 +71,7 @@ with h5py.File(train_h5F_addr,"r") as train_file:
                     print("Full Model saved in file: %s" % save_path)
                     val_mae_loss=0
                     for val_ind in range(val_batch_total):
-                        gen_pat_ind_range=range(220500+val_ind*batch_sz,total_pat+(val_ind+1)*batch_sz,1)
+                        gen_pat_ind_range=range(220500+val_ind*batch_sz,220500+(val_ind+1)*batch_sz,1)
                         gen_inten_bat,gen_gth_dep_bat,gen_LR_dep_bat=bnb.reading_data(train_file, gen_pat_ind_range, HR_batch_dims, LR_batch_dims)
                         mae_loss=loss.eval(feed_dict={HR_inten_batch_input:gen_inten_bat,HR_depth_batch_input:gen_gth_dep_bat,LR_depth_batch_input:gen_LR_dep_bat})
                         val_mae_loss=val_mae_loss+mae_loss
